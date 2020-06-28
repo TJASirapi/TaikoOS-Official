@@ -306,6 +306,7 @@ namespace TJAPlayer3
 			get;
 			private set;
 		}
+
 		public static Format TextureFormat = Format.A8R8G8B8;
 		public bool bApplicationActive
 		{

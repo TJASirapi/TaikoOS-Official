@@ -57,6 +57,7 @@ namespace TJAPlayer3
             base.list子Activities.Add(this.PuchiChara = new PuchiChara());
 
             base.list子Activities.Add(this.actDan = new Dan_Cert());
+            base.list子Activities.Add(this.actTokkun = new CAct特訓モード());
             #region[ 文字初期化 ]
 			ST文字位置[] st文字位置Array = new ST文字位置[ 12 ];
 			ST文字位置 st文字位置 = new ST文字位置();
@@ -358,7 +359,7 @@ namespace TJAPlayer3
                     actDancer.On進行描画();
                 }
 
-                if(!bDoublePlay && TJAPlayer3.ConfigIni.ShowFooter)
+                if (!bDoublePlay && TJAPlayer3.ConfigIni.ShowFooter)
                     this.actFooter.On進行描画();
 
                 if( TJAPlayer3.ConfigIni.ShowChara )
@@ -385,7 +386,7 @@ namespace TJAPlayer3
                 if( ( TJAPlayer3.ConfigIni.eClipDispType == EClipDispType.ウィンドウのみ || TJAPlayer3.ConfigIni.eClipDispType == EClipDispType.両方 ) && TJAPlayer3.ConfigIni.nPlayerCount == 1 )
                     this.actAVI.t窓表示();
 
-				if( !TJAPlayer3.ConfigIni.bNoInfo )
+                if (!TJAPlayer3.ConfigIni.bNoInfo && TJAPlayer3.ConfigIni.eGameMode != EGame.特訓モード)
                     this.t進行描画_ゲージ();
 
                 this.actLaneTaiko.ゴーゴー炎();
@@ -402,6 +403,7 @@ namespace TJAPlayer3
                 this.actMtaiko.On進行描画();
 
                 this.GoGoSplash.On進行描画();
+
                 this.t進行描画_リアルタイム判定数表示();
 
                 if ( !TJAPlayer3.ConfigIni.bNoInfo )
@@ -436,7 +438,10 @@ namespace TJAPlayer3
                 this.actPauseMenu.t進行描画();
 				this.t進行描画_STAGEFAILED();
 
-               
+                if (TJAPlayer3.ConfigIni.eGameMode == EGame.特訓モード)
+                {
+                    actTokkun.On進行描画();
+                }
 
                 bIsFinishedEndAnime = this.actEnd.On進行描画() == 1 ? true : false;
 				bIsFinishedFadeout = this.t進行描画_フェードイン_アウト();
@@ -444,18 +449,31 @@ namespace TJAPlayer3
                 //演奏終了→演出表示→フェードアウト
                 if( bIsFinishedPlaying && base.eフェーズID == CStage.Eフェーズ.共通_通常状態 )
                 {
-                    base.eフェーズID = CStage.Eフェーズ.演奏_演奏終了演出;
-                    this.actEnd.Start();
-                    if (TJAPlayer3.Skin.Game_Chara_Ptn_10combo_Max != 0)
+                    if (TJAPlayer3.ConfigIni.eGameMode == EGame.特訓モード)
                     {
-                        if (TJAPlayer3.stage演奏ドラム画面.actGauge.db現在のゲージ値[0] >= 100)
+                        bIsFinishedPlaying = false;
+                        TJAPlayer3.Skin.sound特訓停止音.t再生する();
+                        actTokkun.t演奏を停止する();
+
+                        actTokkun.n現在の小節線 = TJAPlayer3.stage演奏ドラム画面.actPlayInfo.NowMeasure[0];
+                        actTokkun.t譜面の表示位置を合わせる(true);
+                    }
+                    else
+                    {
+                        base.eフェーズID = CStage.Eフェーズ.演奏_演奏終了演出;
+
+                        this.actEnd.Start();
+                        if (TJAPlayer3.Skin.Game_Chara_Ptn_10combo_Max != 0)
                         {
-                            double dbUnit = (((60.0 / (TJAPlayer3.stage演奏ドラム画面.actPlayInfo.dbBPM))));
-                            this.actChara.アクションタイマーリセット();
-                            this.actChara.ctキャラクターアクション_10コンボMAX = new CCounter(0, TJAPlayer3.Skin.Game_Chara_Ptn_10combo_Max - 1, (dbUnit / TJAPlayer3.Skin.Game_Chara_Ptn_10combo_Max) * 2, CSound管理.rc演奏用タイマ);
-                            this.actChara.ctキャラクターアクション_10コンボMAX.t進行db();
-                            this.actChara.ctキャラクターアクション_10コンボMAX.db現在の値 = 0D;
-                            this.actChara.bマイどんアクション中 = true;
+                            if (TJAPlayer3.stage演奏ドラム画面.actGauge.db現在のゲージ値[0] >= 100)
+                            {
+                                double dbUnit = (((60.0 / (TJAPlayer3.stage演奏ドラム画面.actPlayInfo.dbBPM))));
+                                this.actChara.アクションタイマーリセット();
+                                this.actChara.ctキャラクターアクション_10コンボMAX = new CCounter(0, TJAPlayer3.Skin.Game_Chara_Ptn_10combo_Max - 1, (dbUnit / TJAPlayer3.Skin.Game_Chara_Ptn_10combo_Max) * 2, CSound管理.rc演奏用タイマ);
+                                this.actChara.ctキャラクターアクション_10コンボMAX.t進行db();
+                                this.actChara.ctキャラクターアクション_10コンボMAX.db現在の値 = 0D;
+                                this.actChara.bマイどんアクション中 = true;
+                            }
                         }
                     }
                 }
@@ -500,6 +518,7 @@ namespace TJAPlayer3
         public CAct演奏Drums演奏終了演出 actEnd;
         private CAct演奏Drumsゲームモード actGame;
         public CAct演奏Drums背景 actBackground;
+        public CAct特訓モード actTokkun;
         public GoGoSplash GoGoSplash;
         public FlyingNotes FlyingNotes;
         public FireWorks FireWorks;
@@ -1759,7 +1778,7 @@ namespace TJAPlayer3
 					dTX.tWave再生位置自動補正();
 				}
 			}
-			if ( configIni.b演奏情報を表示する )
+			if ( configIni.b演奏情報を表示する || TJAPlayer3.ConfigIni.eGameMode == EGame.特訓モード)
 			{
                 var nowMeasure = pChip.n整数値_内部番号;
                 if (x >= TJAPlayer3.Skin.Game_Lane_Field_X[nPlayer] - 104)
@@ -1792,15 +1811,6 @@ namespace TJAPlayer3
         /// </summary>
         public void t全体制御メソッド()
         {
-            #if DEBUG
-                TJAPlayer3.act文字コンソール.tPrint(0, 0, C文字コンソール.Eフォント種別.白, "NextCourse= " + this.n現在のコース[0].ToString());
-                TJAPlayer3.act文字コンソール.tPrint(0, 20, C文字コンソール.Eフォント種別.白, "dbRate= " + (((double)(this.CBranchScore[0].nGreat) / (double)(this.CBranchScore[0].nGreat + this.CBranchScore[0].nGood + this.CBranchScore[0].nMiss)) * 100.0).ToString());
-                TJAPlayer3.act文字コンソール.tPrint(0, 40, C文字コンソール.Eフォント種別.白, "Time= " + (CSound管理.rc演奏用タイマ.n現在時刻 * (((double)TJAPlayer3.ConfigIni.n演奏速度) / 20.0)).ToString());
-                TJAPlayer3.act文字コンソール.tPrint(300, 0, C文字コンソール.Eフォント種別.白, "LevelHold= " + this.bLEVELHOLD[0].ToString());
-                TJAPlayer3.act文字コンソール.tPrint(300, 20, C文字コンソール.Eフォント種別.白, "BranchA= " + this.nBranch条件数値A.ToString());
-                TJAPlayer3.act文字コンソール.tPrint(300, 40, C文字コンソール.Eフォント種別.白, "BranchB= " + this.nBranch条件数値B.ToString());
-                TJAPlayer3.act文字コンソール.tPrint(600, 0, C文字コンソール.Eフォント種別.白, "BranchCount= " + this.n分岐した回数[0].ToString());
-            #endif
             int t = (int)CSound管理.rc演奏用タイマ.n現在時刻ms;
             //CDTXMania.act文字コンソール.tPrint( 0, 16, C文字コンソール.Eフォント種別.白, t.ToString() );
 
@@ -1894,7 +1904,12 @@ namespace TJAPlayer3
 
         private void t進行描画_リアルタイム判定数表示()
         {
-            if( TJAPlayer3.ConfigIni.nPlayerCount == 1 ? ( TJAPlayer3.ConfigIni.bJudgeCountDisplay && !TJAPlayer3.ConfigIni.b太鼓パートAutoPlay ) : false )
+            var showJudgeInfo = false;
+
+            if (TJAPlayer3.ConfigIni.nPlayerCount == 1 ? (TJAPlayer3.ConfigIni.bJudgeCountDisplay && !TJAPlayer3.ConfigIni.b太鼓パートAutoPlay) : false) showJudgeInfo = true;
+            if (TJAPlayer3.ConfigIni.eGameMode == EGame.特訓モード) showJudgeInfo = true;
+
+            if (showJudgeInfo)
             {
                 //ボードの横幅は333px
                 //数字フォントの小さいほうはリザルトのものと同じ。

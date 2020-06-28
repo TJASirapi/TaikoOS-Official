@@ -132,6 +132,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Common\Easing.cs" />
     <Compile Include="Common\FontUtilities.cs" />
     <Compile Include="Common\PreciseStringMeasurement\CPreciseStringMeasurer.cs" />
     <Compile Include="Animations\Animator.cs" />
@@ -147,6 +148,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Stages\07.Game\Taiko\CAct特訓モード.cs" />
     <Compile Include="Updates\UpdateChecker.cs" />
     <EmbeddedResource Include="Properties\Discord.resx">
       <Generator>ResXFileCodeGenerator</Generator>

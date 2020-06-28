@@ -451,6 +451,7 @@ namespace TJAPlayer3
 		public CAct演奏DrumsRunner actRunner;
 		public CAct演奏DrumsMob actMob;
 		public Dan_Cert actDan;
+		public CAct特訓モード actTokkun;
 		public bool bPAUSE;
 		public bool[] bIsAlreadyCleared;
 		public bool[] bIsAlreadyMaxed;
@@ -472,7 +473,7 @@ namespace TJAPlayer3
 		protected readonly int[] nパッド0Atoレーン07 = new int[] { 1, 2, 3, 4, 5, 6, 7, 1, 9, 0, 8, 8 };
 		public STDGBVALUE<CHITCOUNTOFRANK> nヒット数_Auto含まない;
 		public STDGBVALUE<CHITCOUNTOFRANK> nヒット数_Auto含む;
-		protected int n現在のトップChip = -1;
+		public int n現在のトップChip = -1;
 		protected int[] n最後に再生したBGMの実WAV番号 = new int[50];
 		protected int n最後に再生したHHのチャンネル番号;
 		protected List<int> L最後に再生したHHの実WAV番号;      // #23921 2011.1.4 yyagi: change "int" to "List<int>", for recording multiple wav No.
@@ -533,7 +534,7 @@ namespace TJAPlayer3
 		protected int nWaitButton;
 
 
-		protected CDTX.CChip[] chip現在処理中の連打チップ = new CDTX.CChip[4];
+		public CDTX.CChip[] chip現在処理中の連打チップ = new CDTX.CChip[4];
 
 		protected const int NOTE_GAP = 25;
 
@@ -3007,7 +3008,10 @@ namespace TJAPlayer3
 									//    this.actChara.ctChara_GoGo = new CCounter( 0, this.actChara.arゴーゴーモーション番号.Length - 1, dbPtn_GoGo, CSound管理.rc演奏用タイマ );
 									//}
 								}
-								actPlayInfo.NowMeasure[nPlayer] = pChip.n整数値_内部番号;
+								if (!bPAUSE)
+								{
+									actPlayInfo.NowMeasure[nPlayer] = pChip.n整数値_内部番号;
+								}
 								pChip.bHit = true;
 							}
 							this.t進行描画_チップ_小節線(configIni, ref dTX, ref pChip, nPlayer);
@@ -3884,22 +3888,22 @@ namespace TJAPlayer3
             this.nHand = new int[]{ 0, 0, 0, 0 };
         }
 
-		public void t演奏位置の変更( int nStartBar, int nPlayer )
+		public void t演奏位置の変更(int nStartBar, int nPlayer)
 		{
 			// まず全サウンドオフにする
 			TJAPlayer3.DTX.t全チップの再生停止();
 			this.actAVI.Stop();
-            CDTX dTX = TJAPlayer3.DTX;
-            switch( nPlayer )
-            {
-                case 1:
-                    dTX = TJAPlayer3.DTX_2P;
-                    break;
-                default:
-                    break;
-            }
+			CDTX dTX = TJAPlayer3.DTX;
+			switch (nPlayer)
+			{
+				case 1:
+					dTX = TJAPlayer3.DTX_2P;
+					break;
+				default:
+					break;
+			}
 
-            if( dTX == null ) return; //CDTXがnullの場合はプレイヤーが居ないのでその場で処理終了
+			if (dTX == null) return; //CDTXがnullの場合はプレイヤーが居ないのでその場で処理終了
 
 
 			#region [ 再生開始小節の変更 ]
@@ -3925,10 +3929,10 @@ namespace TJAPlayer3
 			#region [ 処理を開始するチップの特定 ]
 			//for ( int i = this.n現在のトップChip; i < CDTXMania.DTX.listChip.Count; i++ )
 			bool bSuccessSeek = false;
-			for ( int i = 0; i < dTX.listChip.Count; i++ )
+			for (int i = 0; i < dTX.listChip.Count; i++)
 			{
-				CDTX.CChip pChip = dTX.listChip[ i ];
-				if ( pChip.n発声位置 < 384 * nStartBar )
+				CDTX.CChip pChip = dTX.listChip[i];
+				if (pChip.n発声位置 < 384 * nStartBar)
 				{
 					continue;
 				}
@@ -3939,78 +3943,80 @@ namespace TJAPlayer3
 					break;
 				}
 			}
-			if ( !bSuccessSeek )
+			if (!bSuccessSeek)
 			{
 				// this.n現在のトップChip = CDTXMania.DTX.listChip.Count - 1;
-				this.n現在のトップChip = 0;		// 対象小節が存在しないなら、最初から再生
+				this.n現在のトップChip = 0;       // 対象小節が存在しないなら、最初から再生
 			}
-#endregion
+			#endregion
 
-#region [ 演奏開始の発声時刻msを取得し、タイマに設定 ]
-			int nStartTime = dTX.listChip[ this.n現在のトップChip ].n発声時刻ms;
+			#region [ 演奏開始の発声時刻msを取得し、タイマに設定 ]
+			int nStartTime = dTX.listChip[this.n現在のトップChip].n発声時刻ms;
 
-			CSound管理.rc演奏用タイマ.tリセット();	// これでPAUSE解除されるので、次のPAUSEチェックは不要
-			//if ( !this.bPAUSE )
-			//{
-				CSound管理.rc演奏用タイマ.t一時停止();
+			CSound管理.rc演奏用タイマ.tリセット();  // これでPAUSE解除されるので、次のPAUSEチェックは不要
+										//if ( !this.bPAUSE )
+										//{
+			CSound管理.rc演奏用タイマ.t一時停止();
 			//}
 			CSound管理.rc演奏用タイマ.n現在時刻 = nStartTime;
-#endregion
+			#endregion
 
 			List<CSound> pausedCSound = new List<CSound>();
 
-#region [ BGMやギターなど、演奏開始のタイミングで再生がかかっているサウンドのの途中再生開始 ] // (CDTXのt入力_行解析_チップ配置()で小節番号が+1されているのを削っておくこと)
-			for ( int i = this.n現在のトップChip; i >= 0; i-- )
+			#region [ BGMやギターなど、演奏開始のタイミングで再生がかかっているサウンドのの途中再生開始 ] // (CDTXのt入力_行解析_チップ配置()で小節番号が+1されているのを削っておくこと)
+			for (int i = this.n現在のトップChip; i >= 0; i--)
 			{
-				CDTX.CChip pChip = dTX.listChip[ i ];
+				CDTX.CChip pChip = dTX.listChip[i];
 				int nDuration = pChip.GetDuration();
 
-				if ( ( pChip.n発声時刻ms + nDuration > 0 ) && ( pChip.n発声時刻ms <= nStartTime ) && ( nStartTime <= pChip.n発声時刻ms + nDuration ) )
+				if ((pChip.n発声時刻ms + nDuration > 0) && (pChip.n発声時刻ms <= nStartTime) && (nStartTime <= pChip.n発声時刻ms + nDuration))
 				{
-					if ( pChip.bWAVを使うチャンネルである && ( pChip.nチャンネル番号 >> 4 ) != 0xB )	// wav系チャンネル、且つ、空打ちチップではない
+					if (pChip.bWAVを使うチャンネルである && (pChip.nチャンネル番号 >> 4) != 0xB)  // wav系チャンネル、且つ、空打ちチップではない
 					{
 						CDTX.CWAV wc;
-						bool b = dTX.listWAV.TryGetValue( pChip.n整数値_内部番号, out wc );
-						if ( !b ) continue;
+						bool b = dTX.listWAV.TryGetValue(pChip.n整数値_内部番号, out wc);
+						if (!b) continue;
 
-						if ( ( wc.bIsBGMSound && TJAPlayer3.ConfigIni.bBGM音を発声する ) || ( !wc.bIsBGMSound ) )
+						if ((wc.bIsBGMSound && TJAPlayer3.ConfigIni.bBGM音を発声する) || (!wc.bIsBGMSound))
 						{
 							TJAPlayer3.DTX.tチップの再生(pChip, (long)((CSound管理.rc演奏用タイマ.n前回リセットした時のシステム時刻 * (((double)TJAPlayer3.ConfigIni.n演奏速度) / 20.0))) + pChip.n発声時刻ms, (int)Eレーン.BGM);
 							#region [ PAUSEする ]
 							int j = wc.n現在再生中のサウンド番号;
-							if ( wc.rSound[ j ] != null )
+							if (wc.rSound[j] != null)
 							{
-							    wc.rSound[ j ].t再生を一時停止する();
-							    wc.rSound[ j ].t再生位置を変更する( nStartTime - pChip.n発声時刻ms );
-							    pausedCSound.Add( wc.rSound[ j ] );
+								wc.rSound[j].t再生を一時停止する();
+								wc.rSound[j].t再生位置を変更する(nStartTime - pChip.n発声時刻ms);
+								pausedCSound.Add(wc.rSound[j]);
 							}
-#endregion
+							#endregion
 						}
 					}
 				}
 			}
-#endregion
-#region [ 演奏開始時点で既に表示されているBGAとAVIの、シークと再生 ]
-			this.actAVI.SkipStart( nStartTime );
-#endregion
-#region [ PAUSEしていたサウンドを一斉に再生再開する(ただしタイマを止めているので、ここではまだ再生開始しない) ]
-			foreach ( CSound cs in pausedCSound )
+			#endregion
+			#region [ 演奏開始時点で既に表示されているBGAとAVIの、シークと再生 ]
+			this.actAVI.SkipStart(nStartTime);
+			#endregion
+			#region [ PAUSEしていたサウンドを一斉に再生再開する(ただしタイマを止めているので、ここではまだ再生開始しない) ]
+			foreach (CSound cs in pausedCSound)
 			{
 				cs.tサウンドを再生する();
 			}
 			pausedCSound.Clear();
 			pausedCSound = null;
-#endregion
-#region [ タイマを再開して、PAUSEから復帰する ]
+			#endregion
+			#region [ タイマを再開して、PAUSEから復帰する ]
+
 			CSound管理.rc演奏用タイマ.n現在時刻 = nStartTime;
-			TJAPlayer3.Timer.tリセット();						// これでPAUSE解除されるので、3行先の再開()は不要
-			TJAPlayer3.Timer.n現在時刻 = nStartTime;				// Debug表示のTime: 表記を正しくするために必要
+			TJAPlayer3.Timer.tリセット();                       // これでPAUSE解除されるので、3行先の再開()は不要
+			TJAPlayer3.Timer.n現在時刻 = nStartTime;                // Debug表示のTime: 表記を正しくするために必要
 			CSound管理.rc演奏用タイマ.t再開();
 			//CDTXMania.Timer.t再開();
-			this.bPAUSE = false;								// システムがPAUSE状態だったら、強制解除
-#endregion
-#endregion
+			this.bPAUSE = false;                                // システムがPAUSE状態だったら、強制解除
+			#endregion
+			#endregion
 		}
+
 
         public void t演奏中止()
         {

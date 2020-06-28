@@ -825,11 +825,12 @@ namespace TJAPlayer3
                 "(1人プレイ専用)\n" +
                 "TYPE-A: 完走!叩ききりまショー!\n" +
                 "TYPE-B: 完走!叩ききりまショー!(激辛)\n" +
+				"TYPE-C: 特訓モード\n" +
                 " \n",
                 " \n" +
                 " \n" +
                 " ",
-                new string[] { "OFF", "TYPE-A", "TYPE-B" });
+                new string[] { "OFF", "TYPE-A", "TYPE-B", "TYPE-C" });
             this.list項目リスト.Add( this.iTaikoGameMode );
 
             this.iTaikoBigNotesJudge = new CItemToggle( "BigNotesJudge", TJAPlayer3.ConfigIni.b大音符判定,
