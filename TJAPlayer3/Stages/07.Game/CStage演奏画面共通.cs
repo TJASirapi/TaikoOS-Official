@@ -328,8 +328,8 @@ namespace TJAPlayer3
 			if (!base.b活性化してない)
 			{
 				TJAPlayer3.t安全にDisposeする(ref this.tx背景);
-                Trace.TraceInformation("CStage演奏画面共通 リソースの開放");
-                base.OnManagedリソースの解放();
+				Trace.TraceInformation("CStage演奏画面共通 リソースの開放");
+				base.OnManagedリソースの解放();
 			}
 		}
 
@@ -2521,6 +2521,8 @@ namespace TJAPlayer3
 				keyboard, TJAPlayer3.SoundGroupLevelController, TJAPlayer3.Skin, false);
 			#endregion
 		}
+
+		
 
 		protected void t入力メソッド記憶(E楽器パート part)
 		{

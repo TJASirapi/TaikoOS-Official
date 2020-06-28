@@ -1,5 +1,4 @@
-﻿using System.Drawing;
-using System.Runtime.InteropServices;
+﻿using System;
 using SlimDX.DirectInput;
 using FDK;
 using System.Diagnostics;
@@ -70,48 +69,72 @@ namespace TJAPlayer3
 
                 TJAPlayer3.act文字コンソール.tPrint(256, 360, C文字コンソール.Eフォント種別.白, TJAPlayer3.stage演奏ドラム画面.actPlayInfo.NowMeasure[0] + "/" + this.n小節の総数);
 
-                if (TJAPlayer3.Input管理.Keyboard.bキーが押された((int)Key.Space))
+                if (this.b特訓PAUSE)//2020/06/28 Akane 特訓の操作と処理を一部改善
                 {
-                    if (this.b特訓PAUSE)
+                    if (TJAPlayer3.Pad.b押されたDGB(Eパッド.LRed)|| TJAPlayer3.Input管理.Keyboard.bキーが押された((int)Key.Space))
                     {
-                        TJAPlayer3.Skin.sound特訓再生音.t再生する();
-                        this.t演奏を再開する();
+                       TJAPlayer3.Skin.sound特訓再生音.t再生する();
+                        this.t演奏を再開する();                      
                     }
-                    else
+                    if (TJAPlayer3.Input管理.Keyboard.bキーが押された((int)Key.LeftArrow) || TJAPlayer3.Pad.b押されたDGB(Eパッド.LBlue))
                     {
+                        
+                        
+                            if (this.n現在の小節線 > 1)
+                            {
+                                this.n現在の小節線--;
+                                TJAPlayer3.stage演奏ドラム画面.actPlayInfo.NowMeasure[0] = this.n現在の小節線;
+
+                                this.t譜面の表示位置を合わせる(true);
+                                TJAPlayer3.Skin.sound特訓スクロール音.t再生する();
+                            }
+                        
+                    }
+                    if (TJAPlayer3.Input管理.Keyboard.bキーが押された((int)Key.RightArrow) || TJAPlayer3.Pad.b押されたDGB(Eパッド.RBlue))
+                    {
+                        
+                            if (this.n現在の小節線 < this.n小節の総数)
+                            {
+                                this.n現在の小節線++;
+                                TJAPlayer3.stage演奏ドラム画面.actPlayInfo.NowMeasure[0] = this.n現在の小節線;
+
+                                this.t譜面の表示位置を合わせる(true);
+                                TJAPlayer3.Skin.sound特訓スクロール音.t再生する();
+                            }
+                        
+                    }
+
+
+                }
+                else
+                {
+                    if (TJAPlayer3.Pad.b押されたDGB(Eパッド.LRed2P) || TJAPlayer3.Input管理.Keyboard.bキーが押された((int)Key.D8)|| TJAPlayer3.Input管理.Keyboard.bキーが押された((int)Key.Space))
+                    {
+                        
                         TJAPlayer3.Skin.sound特訓停止音.t再生する();
                         this.t演奏を停止する();
+                        
                     }
-                }
-                if (TJAPlayer3.Input管理.Keyboard.bキーが押された((int)Key.LeftArrow) || TJAPlayer3.Pad.b押されたDGB(Eパッド.LBlue))
-                {
-                    if (this.b特訓PAUSE)
+                    if (TJAPlayer3.Pad.b押されたDGB(Eパッド.RRed2P)||TJAPlayer3.Input管理.Keyboard.bキーが押された((int)Key.D9) )
                     {
-                        if (this.n現在の小節線 > 1)
-                        {
-                            this.n現在の小節線--;
-                            TJAPlayer3.stage演奏ドラム画面.actPlayInfo.NowMeasure[0] = this.n現在の小節線;
-
-                            this.t譜面の表示位置を合わせる(true);
-                            TJAPlayer3.Skin.sound特訓スクロール音.t再生する();
-                        }
+                        if (TJAPlayer3.ConfigIni.b太鼓パートAutoPlay == false)
+                            TJAPlayer3.ConfigIni.b太鼓パートAutoPlay = true;
+                        else
+                            TJAPlayer3.ConfigIni.b太鼓パートAutoPlay = false;
                     }
-                }
-                if (TJAPlayer3.Input管理.Keyboard.bキーが押された((int)Key.RightArrow) || TJAPlayer3.Pad.b押されたDGB(Eパッド.RBlue))
-                {
-                    if (this.b特訓PAUSE)
+                    if (TJAPlayer3.Pad.b押されたDGB(Eパッド.RBlue2P) || TJAPlayer3.Input管理.Keyboard.bキーが押された((int)Key.D0))
                     {
-                        if (this.n現在の小節線 < this.n小節の総数)
-                        {
-                            this.n現在の小節線++;
-                            TJAPlayer3.stage演奏ドラム画面.actPlayInfo.NowMeasure[0] = this.n現在の小節線;
-
-                            this.t譜面の表示位置を合わせる(true);
-                            TJAPlayer3.Skin.sound特訓スクロール音.t再生する();
-                        }
+                        TJAPlayer3.ConfigIni.n譜面スクロール速度.Drums = Math.Min(TJAPlayer3.ConfigIni.n譜面スクロール速度.Drums + 1, 1999);
                     }
+                    if (TJAPlayer3.Pad.b押されたDGB(Eパッド.LBlue2P) || TJAPlayer3.Input管理.Keyboard.bキーが押された((int)Key.D9))
+                    {
+                        TJAPlayer3.ConfigIni.n譜面スクロール速度.Drums = Math.Max(TJAPlayer3.ConfigIni.n譜面スクロール速度.Drums -1, 0);
+                    }
+
+
                 }
 
+                
                 if (this.bスクロール中)
                 {
                     CSound管理.rc演奏用タイマ.n現在時刻ms = easing.EaseOut(this.スクロールカウンター, (int)this.nスクロール前ms, (int)this.nスクロール後ms, Easing.CalcType.Circular);

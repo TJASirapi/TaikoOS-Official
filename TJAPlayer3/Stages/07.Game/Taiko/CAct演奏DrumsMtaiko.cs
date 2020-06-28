@@ -142,7 +142,8 @@ namespace TJAPlayer3
 				this.nフラッシュ制御タイマ += 20;
 		    }
 
-
+          
+            
             this.nHS = TJAPlayer3.ConfigIni.n譜面スクロール速度.Drums < 8 ? TJAPlayer3.ConfigIni.n譜面スクロール速度.Drums : 7;
 
             //if(CDTXMania.Tx.Taiko_Frame[ 0 ] != null )
@@ -436,11 +437,12 @@ namespace TJAPlayer3
         private string[] strCourseSymbolFileName;
 
         //オプション
-        private CTexture txオプションパネル_HS;
+        /*private CTexture txオプションパネル_HS;
         private CTexture txオプションパネル_RANMIR;
         private CTexture txオプションパネル_特殊;
+        */
         private int nHS;
-
+        
         //ネームプレート
         //private CTexture txネームプレート;
         //private CTexture txネームプレート2P;
