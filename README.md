@@ -1,4 +1,8 @@
-# TJAPlayer3-f
+# TaikoOS
+
+
+
+以下フォーク元より
 
 TJAPlayer3をForkして、趣味程度に改造してます。
 改造者:[@Mr_Ojii](https://twitter.com/Mr_Ojii)はC#を2020年3月に初めて触りました。  
