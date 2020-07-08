@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using FDK;
+using SharpDX;
 using System.Diagnostics;
 using System.Drawing;
 using System.Runtime.InteropServices;
-using SharpDX;
-using FDK;
-
-using Rectangle = System.Drawing.Rectangle;
 using Point = System.Drawing.Point;
-using Color = System.Drawing.Color;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace TJAPlayer3
 {

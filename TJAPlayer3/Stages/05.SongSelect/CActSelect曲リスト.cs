@@ -7,11 +7,9 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Runtime.InteropServices;
-
-using Rectangle = System.Drawing.Rectangle;
-using Point = System.Drawing.Point;
 using Color = System.Drawing.Color;
-using Microsoft.VisualBasic;
+using Point = System.Drawing.Point;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace TJAPlayer3
 {

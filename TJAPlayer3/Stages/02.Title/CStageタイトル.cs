@@ -1,11 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
+﻿using FDK;
+using System;
 using System.Diagnostics;
 using System.Drawing;
-using FDK;
 using System.Reflection;
+using System.Runtime.InteropServices;
 
 namespace TJAPlayer3
 {
@@ -186,19 +184,17 @@ namespace TJAPlayer3
 
 				#region[ バージョン表示 ]
 				//string strVersion = "KTT:J:A:I:2017072200";
-				string strCreator = "https://github.com/Mr-Ojii/TJAPlayer3";
+				string strCreator = "https://github.com/AkaneKotonoha/TaikoOS-Official";
 				AssemblyName asmApp = Assembly.GetExecutingAssembly().GetName();
 #if DEBUG
-				TJAPlayer3.act文字コンソール.tPrint(4, 44, C文字コンソール.Eフォント種別.白, "DEBUG BUILD?");
+				TJAPlayer3.act文字コンソール.tPrint(4, 44, C文字コンソール.Eフォント種別.白, "DEBUG");
 #endif
 				TJAPlayer3.act文字コンソール.tPrint(4, 4, C文字コンソール.Eフォント種別.白, asmApp.Name + " Ver." + TJAPlayer3.VERSION + " (" + strCreator + ")");
 				TJAPlayer3.act文字コンソール.tPrint(4, 24, C文字コンソール.Eフォント種別.白, "Skin:" + TJAPlayer3.Skin.Skin_Name + " Ver." + TJAPlayer3.Skin.Skin_Version + " (" + TJAPlayer3.Skin.Skin_Creator + ")");
 				//CDTXMania.act文字コンソール.tPrint(4, 24, C文字コンソール.Eフォント種別.白, strSubTitle);
-				TJAPlayer3.act文字コンソール.tPrint(4, (720 - 24), C文字コンソール.Eフォント種別.白, "TJAPlayer3-f forked TJAPlayer3(AioiLight) forked TJAPlayer2 forPC(kairera0467)");
-				#endregion
-
-
-				if (TJAPlayer3.Tx.Title_InBar != null && TJAPlayer3.Tx.Title_AcBar != null)
+				TJAPlayer3.act文字コンソール.tPrint(4, (720 - 24), C文字コンソール.Eフォント種別.白, "TaikoOS made by TOS develop team");
+                #endregion
+                if (TJAPlayer3.Tx.Title_InBar != null && TJAPlayer3.Tx.Title_AcBar != null)
 				{
 					for (int i = 0; i < 3; i++)
 					{

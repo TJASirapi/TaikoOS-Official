@@ -407,9 +407,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\TJAPlayer3\TJAPlayer3-f.csproj">
+    <ProjectReference Include="..\TJAPlayer3\TaikoOS.csproj">
       <Project>{81BEC512-8074-4BD1-8A3C-AC73BC7BF846}</Project>
-      <Name>TJAPlayer3-f</Name>
+      <Name>TaikoOS</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

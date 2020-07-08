@@ -1,13 +1,10 @@
+using FDK;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
-using System.Drawing;
 using System.Diagnostics;
-using System.IO;
-using FDK;
-using CSharpTest.Net.Collections;
-
+using System.Drawing;
+using System.Runtime.InteropServices;
+using System.Text;
 using Rectangle = System.Drawing.Rectangle;
 
 namespace TJAPlayer3

@@ -27,8 +27,8 @@ namespace TJAPlayer3
 		extern static bool InternetGetConnectedState(out int lpdwFlags, int dwReserved);
 		// プロパティ
 		#region [ properties ]
-		public static readonly string VERSION = Assembly.GetExecutingAssembly().GetName().Version.ToString().Substring(0, Assembly.GetExecutingAssembly().GetName().Version.ToString().Length - 2);
-
+		public static readonly string VERSION = "1.0.0";
+		public static readonly string VERSION2 = "TOS1.0.0.0";
 		public static TJAPlayer3 app
 		{
 			get;

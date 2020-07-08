@@ -2416,9 +2416,9 @@ namespace TJAPlayer3
 
 		#region 新・SkinConfig
 		#region General
-		public string Skin_Name = "Unknown";
-		public string Skin_Version = "Unknown";
-		public string Skin_Creator = "Unknown";
+		public string Skin_Name = "TOS Normal style";
+		public string Skin_Version = "1.0.0";
+		public string Skin_Creator = "TOS Skin team";
 		#endregion
 		#region Config
 		public int Config_ItemText_Correction_X = 0;

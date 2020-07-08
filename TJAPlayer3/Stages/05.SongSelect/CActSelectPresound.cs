@@ -1,8 +1,6 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Diagnostics;
 using FDK;
+using System;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 

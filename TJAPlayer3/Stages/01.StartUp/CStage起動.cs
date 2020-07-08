@@ -1,11 +1,6 @@
-﻿using System;
+﻿using FDK;
 using System.Collections.Generic;
-using System.Text;
 using System.Diagnostics;
-using System.Threading;
-using System.IO;
-using FDK;
-using System.Runtime.Serialization.Formatters.Binary;
 
 
 namespace TJAPlayer3
@@ -86,13 +81,13 @@ namespace TJAPlayer3
 			{
 				if( base.b初めての進行描画 )
 				{
-					this.list進行文字列.Add( "DTXManiaXG Ver.K powered by YAMAHA Silent Session Drums\n" );
-					this.list進行文字列.Add( "Product by.kairera0467\n" );
-					this.list進行文字列.Add( "Release: " + TJAPlayer3.VERSION + " [" + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version.ToString() + "]" );
+					this.list進行文字列.Add( "This software product by KotonohaGroup\n" );
+					this.list進行文字列.Add( "Please read README.txt...\n" );
+					this.list進行文字列.Add( "Release: " + TJAPlayer3.VERSION + " [" + TJAPlayer3.VERSION2 + "]" );
 
 					this.list進行文字列.Add("");
-					this.list進行文字列.Add("TJAPlayer3-f forked TJAPlayer3 (Aioilight)");
-					this.list進行文字列.Add("TJAPlayer3-f edited by Mr-Ojii(@Mr_Ojii)");
+					this.list進行文字列.Add("TaikoOS forked by TJAPlayer3-f(@Mr_Ojii)");
+					this.list進行文字列.Add("TaikoOS edited by TaikoOS develop team)");
 					this.list進行文字列.Add("");
 
 					es = new CEnumSongs();
@@ -146,7 +141,7 @@ namespace TJAPlayer3
 						this.list進行文字列.Add("LOADING TEXTURES...");
 						TJAPlayer3.Tx.LoadTexture();
 						this.list進行文字列.Add("LOADING TEXTURES...OK");
-						this.str現在進行中 = "Setup done.";
+						this.str現在進行中 = "Have a fun!!!.";
 						break;
 				}
 				//-----------------
